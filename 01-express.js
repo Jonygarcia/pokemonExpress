@@ -1,24 +1,37 @@
 "use strict";
 
-const mongoose = require("mongoose");
-
 let express = require("express"),
+    mongoose = require("mongoose"),
+    bodyParser = require('body-parser'),
     app = express();
 
-const user = 'jonygarcia';
-const password = '9jyvbAI96odjR7XW';
-const dbname = 'pokemon';
-const uri = `mongodb+srv://${user}:${password}@cluster0.59lg6dg.mongodb.net/${dbname}?retryWrites=true&w=majority`;
+// Parse ---
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// .env ---
+require('dotenv').config();
+let port = process.env.PORT || 3000;
+
+// Static Files ---
+app.use(express.static(__dirname + "/public/"));
+
+// Views ---
+app.set("view engine", "ejs");
+app.set("views", __dirname + "/views/");
+
+// Routes ---
+app.use('/', require('./routes/rutas'))
+app.use('/pokemon', require('./routes/pokemon'))
+
+// MongoDB ---
+mongoose.set('strictQuery', false);
+const uri = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.59lg6dg.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`;
+
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('Base de datos conectada'))
     .catch(e => console.log(e))
 
-app.use(express.static(__dirname + "/public/"));
-app.set("view engine", "ejs");
-app.set("views", __dirname + "/views/");
-
-app.use('/', require('./router/rutas'))
-app.use('/pokemon', require('./router/pokemon'))
 
 app
     .use((req, res) => {
@@ -30,6 +43,6 @@ app
             });
     })
 
-    .listen(3000);
+    .listen(port)
 
-console.log("Iniciando Express en el puerto 3000");
+console.log("Server listening on port " + port);

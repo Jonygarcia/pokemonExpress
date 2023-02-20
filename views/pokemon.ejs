@@ -1,6 +1,11 @@
 <%- include('template/cabecera', {tituloWeb: 'Panel de Administración' }) %>
 
     <div class="container">
+        <h1>CRUD MongoDB</h1>
+        <a class="btn btn-success btn-block my-4" href="/pokemon/crear">Crear nuevo Pokémon</a>
+    </div>
+
+    <div class="container">
         <table class="table">
             <thead>
                 <tr>
@@ -19,7 +24,7 @@
                             <td><%= pokemon.nombre %></td>
                             <td><%= pokemon.tipo %></td>
                             <td><%= pokemon.descripcion %></td>
-                            <td>Editar Borrar</td>
+                            <td><a class="btn btn-warning btn-sm" href="pokemon/<%= pokemon.id %>">Editar/Eliminar</a></td>
                         </tr>
                     <% }) %>
                 <% } %>
