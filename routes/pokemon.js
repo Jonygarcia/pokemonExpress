@@ -48,4 +48,50 @@ router.get('/:id', async (req, res) => {
     }
 })
 
+router.delete('/:id', async (req, res) => {
+    const id = req.params.id;
+    console.log('_id desde backend', id)
+    try {
+        const pokemonDB = await Pokemon.findByIdAndDelete({ _id: id });
+        console.log(pokemonDB)
+
+        if (!pokemonDB) {
+            res.json({
+                estado: false,
+                mensaje: 'No se puede eliminar el Pokémon'
+            })
+        } else {
+            res.json({
+                estado: true,
+                mensaje: 'Pokémon eliminado'
+            })
+        }
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.put('/:id', async (req, res) => {
+    const id = req.params.id;
+    const body = req.body;
+    console.log(id)
+    console.log('body', body)
+    try {
+        const pokemonDB = await Pokemon.findByIdAndUpdate(
+            id, body, { useFindAndModify: false }
+        )
+        console.log(pokemonDB)
+        res.json({
+            estado: true,
+            mensaje: 'Pokémon editado'
+        })
+    } catch (error) {
+        console.log(error)
+        res.json({
+            estado: false,
+            mensaje: 'Problema al editar el Pokémon'
+        })
+    }
+})
+
 module.exports = router;
